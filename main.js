@@ -26,41 +26,155 @@ let x = 5, y = 15; // установили первоначальные коор
 let mainArr = [
     //палка
     [
-        [0,1],[0,2],[0,3]
+        [0,1],[0,2],[0,3],
+        // поворот на 90 градусов
+        [
+            [-1,1],[0,0],[1,-1],[2,-2]
+        ],
+        // на 180 градусов
+        [
+            [1,-1],[0,0],[-1,1],[-2,2]
+        ],
+        // поворот на 270 градусов
+        [
+            [-1,1],[0,0],[1,-1],[2,-2]
+        ],
+        // на 360 градусов
+        [
+            [1,-1],[0,0],[-1,1],[-2,2]
+        ]
     ],
     //квадрат
     [
-        [1,0],[0,1],[1,1]
+        [1,0],[0,1],[1,1],
+        // поворот на 90 градусов
+        [
+            [0,0],[0,0],[0,0],[0,0]
+        ],
+        // на 180 градусов
+        [
+            [0,0],[0,0],[0,0],[0,0]
+        ],
+        // поворот на 270 градусов
+        [
+            [0,0],[0,0],[0,0],[0,0]
+        ],
+        // на 360 градусов
+        [
+            [0,0],[0,0],[0,0],[0,0]
+        ]
     ],
     //Буква L
     [
-        [1,0],[0,1],[0,2]
+        [1,0],[0,1],[0,2],
+        // поворот на 90 градусов
+        [
+            [0,0],[-1,1],[1,0],[2,-1]
+        ],
+        // на 180 градусов
+        [
+            [1,-1],[1,-1],[-1,0],[-1,0]
+        ],
+        // поворот на 270 градусов
+        [
+            [-1,0],[0,-1],[2,-2],[1,-1]
+        ],
+        // на 360 градусов
+        [
+            [0,-1],[0,-1],[-2,0],[-2,0]
+        ]
     ],
     //Буква L (зеркальная)
     [
-        [1,0],[1,1],[1,2]
+        [1,0],[1,1],[1,2],
+        // поворот на 90 градусов
+        [
+            [0,0],[0,0],[1,-1],[-1,-1]
+        ],
+        // на 180 градусов
+        [
+            [0,-1],[-1,0],[-2,1],[1,0]
+        ],
+        // поворот на 270 градусов
+        [
+            [2,0],[0,0],[1,-1],[1,-1]
+        ],
+        // на 360 градусов
+        [
+            [-2,0],[1,-1],[0,0],[-1,1]
+        ]
     ],
     //Молния (право)
     [
-        [1,0],[-1,1],[0,1]
+        [1,0],[-1,1],[0,1],
+        // поворот на 90 градусов
+        [
+            [0,-1],[-1,0],[2,-1],[1,0]
+        ],
+        // на 180 градусов
+        [
+            [0,0],[1,-1],[-2,0],[-1,-1]
+        ],
+        // поворот на 270 градусов
+        [
+            [0,-1],[-1,0],[2,-1],[1,0]
+        ],
+        // на 360 градусов
+        [
+            [0,0],[1,-1],[-2,0],[-1,-1]
+        ]
     ],
     //Молния (лево)
     [
-        [1,0],[1,1],[2,1]
+        [1,0],[1,1],[2,1],
+        // поворот на 90 градусов
+        [
+            [2,-1],[0,0],[1,-1],[-1,0]
+        ],
+        // на 180 градусов
+        [
+            [-2,0],[0,-1],[-1,0],[1,-1]
+        ],
+        // поворот на 270 градусов
+        [
+            [2,-1],[0,0],[1,-1],[-1,0]
+        ],
+        // на 360 градусов
+        [
+            [-2,0],[0,-1],[-1,0],[1,-1]
+        ]
     ],
     //Лего
     [
-        [1,0],[2,0],[1,1]
+        [1,0],[2,0],[1,1],
+        // поворот на 90 градусов
+        [
+            [1,-1],[0,0],[0,0],[0,0]
+        ],
+        // на 180 градусов
+        [
+            [0,0],[-1,0],[-1,0],[1,-1]
+        ],
+        // поворот на 270 градусов
+        [
+            [1,-1],[1,-1],[1,-1],[0,0]
+        ],
+        // на 360 градусов
+        [
+            [-2,0],[0,-1],[0,-1],[-1,-1]
+        ]
     ]
 ]
 
 let currentFigure = 0; // вспомогательная для рандома
 let figureBody = 0; // вспомогательная
+let rotate = 1; // отслеживаем поворот единицы
 
 function create(){//создание фигуры
     function getRandom(){
         return Math.round(Math.random()*(mainArr.length-1))//рандомная фигура (индекс массива)
     }
+    rotate = 1;
     currentFigure = getRandom();
     figureBody = [ // выбор нужных клеточек
         document.querySelector(`[posx = "${x}"][posy = "${y}"]`),
@@ -116,3 +230,79 @@ function move() {
 let interval = setInterval(() => {
     move();
 }, 300);
+
+let flag = true;
+window.addEventListener('keydown', function (e){
+    let coordinates1 = [figureBody[0].getAttribute('posX'), figureBody[0].getAttribute('posY')];
+    let coordinates2 = [figureBody[1].getAttribute('posX'), figureBody[1].getAttribute('posY')];
+    let coordinates3 = [figureBody[2].getAttribute('posX'), figureBody[2].getAttribute('posY')];
+    let coordinates4 = [figureBody[3].getAttribute('posX'), figureBody[3].getAttribute('posY')];
+
+    function getNewState(a) {
+        flag = true;
+        let figureNew = [
+            document.querySelector(`[posX = "${+coordinates1[0] + a}"][posY = "${coordinates1[1]}"]`),
+            document.querySelector(`[posX = "${+coordinates2[0] + a}"][posY = "${coordinates2[1]}"]`),
+            document.querySelector(`[posX = "${+coordinates3[0] + a}"][posY = "${coordinates3[1]}"]`),
+            document.querySelector(`[posX = "${+coordinates4[0] + a}"][posY = "${coordinates4[1]}"]`)
+        ];
+
+        for(let i = 0; i<figureNew.length; i++){
+            if(!figureNew[i] || figureNew[i].classList.contains('set')){
+                flag = false;
+            }
+        }
+        if(flag == true){
+            for (let i=0; i<figureBody.length; i++){
+                figureBody[i].classList.remove('figure'); //убираем предыдущую зарисовку
+            }  
+            figureBody = figureNew;
+            for (let i=0; i<figureBody.length; i++){
+                figureBody[i].classList.add('figure'); //убираем предыдущую зарисовку
+            }
+        }
+    }
+    if(e.keyCode == 37){
+        getNewState(-1);
+    }
+    else
+    if(e.keyCode == 39){
+        getNewState(1);
+    }
+    else
+    if(e.keyCode == 40){
+        move();
+    }
+    else
+    if(e.keyCode == 38){
+        flag = true;
+        let figureNew = [
+            document.querySelector(`[posX = "${+coordinates1[0] + mainArr[currentFigure][rotate+2][0][0]}"][posY = "${+coordinates1[1] + mainArr[currentFigure][rotate+2][0][1]}"]`),
+            document.querySelector(`[posX = "${+coordinates2[0] + mainArr[currentFigure][rotate+2][1][0]}"][posY = "${+coordinates2[1] + mainArr[currentFigure][rotate+2][1][1]}"]`),
+            document.querySelector(`[posX = "${+coordinates3[0] + mainArr[currentFigure][rotate+2][2][0]}"][posY = "${+coordinates3[1] + mainArr[currentFigure][rotate+2][2][1]}"]`),
+            document.querySelector(`[posX = "${+coordinates4[0] + mainArr[currentFigure][rotate+2][3][0]}"][posY = "${+coordinates4[1] + mainArr[currentFigure][rotate+2][3][1]}"]`)
+        ];
+
+        for(let i = 0; i<figureNew.length; i++){
+            if(!figureNew[i] || figureNew[i].classList.contains('set')){
+                flag = false;
+            }
+        }
+        if(flag == true){
+            for (let i=0; i<figureBody.length; i++){
+                figureBody[i].classList.remove('figure'); //убираем предыдущую зарисовку
+            }  
+            figureBody = figureNew;
+            for (let i=0; i<figureBody.length; i++){
+                figureBody[i].classList.add('figure'); //убираем предыдущую зарисовку
+            }
+            if(rotate < 4){
+                rotate++;
+            }
+            else{
+                rotate = 1;
+            }
+        }
+    }
+});
+
